@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -15,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InMemoryItemService implements ItemService {
+public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage storage;
 
@@ -55,9 +54,6 @@ public class InMemoryItemService implements ItemService {
 
     @Override
     public ItemDto createItem(Item item) {
-        checkName(item);
-        checkDescription(item);
-        checkAvailable(item);
         log.info("Вещь {} добавлена", item.getName());
         return ItemMapper.mapToItemDto(storage.createItem(item));
     }
@@ -74,6 +70,7 @@ public class InMemoryItemService implements ItemService {
         if (item.getAvailable() != null) {
             oldItem.setAvailable(item.getAvailable());
         }
+        log.info("Вещь c id {} обновлена", oldItem.getId());
         return ItemMapper.mapToItemDto(storage.updateItem(oldItem));
     }
 
@@ -81,26 +78,5 @@ public class InMemoryItemService implements ItemService {
     public void deleteItem(Long id) {
         getItemById(id);
         storage.deleteItem(id);
-    }
-
-    private void checkName(Item item) {
-        if (item.getName() == null || item.getName().isBlank()) {
-            log.error("Не указано наименование вещи");
-            throw new ValidationException("Должно быть указано наименование вещи");
-        }
-    }
-
-    private void checkDescription(Item item) {
-        if (item.getDescription() == null || item.getDescription().isBlank()) {
-            log.error("Нет описания вещи");
-            throw new ValidationException("Должно быть описание вещи");
-        }
-    }
-
-    private void checkAvailable(Item item) {
-        if (item.getAvailable() == null) {
-            log.error("Не указана доступность вещи");
-            throw new ValidationException("Должно быть указана доступность вещи");
-        }
     }
 }

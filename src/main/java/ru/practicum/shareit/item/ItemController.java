@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -14,18 +15,19 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    private final ItemService service;
+    private static final String userIdHeader = "X-Sharer-User-Id";
+    private final ItemService itemService;
     private final UserService userService;
 
     @GetMapping
-    public List<ItemDto> getItemsByOwner(@RequestHeader(value = "X-Sharer-User-Id") Long id) {
+    public List<ItemDto> getItemsByOwner(@RequestHeader(userIdHeader) Long id) {
         userService.getUserById(id);
-        return service.getItemsByOwner(id);
+        return itemService.getItemsByOwner(id);
     }
 
     @GetMapping("/{id}")
     public ItemDto getItemById(@PathVariable Long id) {
-        return service.getItemById(id);
+        return itemService.getItemById(id);
     }
 
     @GetMapping("/search")
@@ -33,23 +35,23 @@ public class ItemController {
         if (text == null || text.isBlank()) {
             return List.of();
         }
-        return service.getItemByText(text);
+        return itemService.getItemByText(text);
     }
 
     @PostMapping
-    public ItemDto createItem(@RequestBody Item item, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public ItemDto createItem(@Valid @RequestBody Item item, @RequestHeader(userIdHeader) Long userId) {
         userService.getUserById(userId);
         item.setOwner(userId);
-        return service.createItem(item);
+        return itemService.createItem(item);
     }
 
     @PatchMapping("{id}")
-    public ItemDto updateItem(@RequestBody Item item, @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+    public ItemDto updateItem(@RequestBody Item item, @RequestHeader(userIdHeader) Long userId,
                               @PathVariable Long id) {
         userService.getUserById(userId);
         item.setOwner(userId);
         item.setId(id);
-        return service.updateItem(item, id);
+        return itemService.updateItem(item, id);
     }
 }
 
