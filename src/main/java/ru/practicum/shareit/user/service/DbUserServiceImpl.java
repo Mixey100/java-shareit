@@ -31,7 +31,7 @@ public class DbUserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id "+ id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         return UserMapper.mapToUserDto(user);
     }
 
@@ -47,7 +47,7 @@ public class DbUserServiceImpl implements UserService {
     @Transactional
     public UserDto updateUser(UserDto userDto, Long id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id "+ id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         if (userDto.getName() != null && !userDto.getName().isBlank()) {
             user.setName(userDto.getName());
         }
