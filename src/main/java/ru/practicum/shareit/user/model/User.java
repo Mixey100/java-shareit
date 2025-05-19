@@ -1,17 +1,16 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.user.model.User;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @NoArgsConstructor
-@Table(name = "items")
-public class Item {
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -20,14 +19,7 @@ public class Item {
     @Size(max = 50)
     String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(max = 255)
-    String description;
-
-    @Column(name = "is_available", nullable = false)
-    Boolean available;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    User owner;
+    String email;
 }

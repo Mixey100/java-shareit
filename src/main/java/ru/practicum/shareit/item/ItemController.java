@@ -3,6 +3,8 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentDtoRequest;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -20,9 +22,9 @@ public class ItemController {
     private final UserService userService;
 
     @GetMapping
-    public List<ItemDto> getItemsByOwner(@RequestHeader(userIdHeader) Long id) {
-        userService.getUserById(id);
-        return itemService.getItemsByOwner(id);
+    public List<ItemDto> getItemsByOwnerId(@RequestHeader(value = userIdHeader, required = false) Long ownerId) {
+        userService.getUserById(ownerId);
+        return itemService.getItemsByOwnerId(ownerId);
     }
 
     @GetMapping("/{id}")
@@ -32,26 +34,33 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getItemByText(@RequestParam(required = false) String text) {
-        if (text == null || text.isBlank()) {
-            return List.of();
-        }
         return itemService.getItemByText(text);
     }
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody Item item, @RequestHeader(userIdHeader) Long userId) {
-        userService.getUserById(userId);
-        item.setOwner(userId);
-        return itemService.createItem(item);
+    public ItemDto createItem(@Valid @RequestBody ItemDto item,
+                              @RequestHeader(value = userIdHeader, required = false) Long ownerId) {
+        userService.getUserById(ownerId);
+        return itemService.createItem(item, ownerId);
     }
 
     @PatchMapping("{id}")
-    public ItemDto updateItem(@RequestBody Item item, @RequestHeader(userIdHeader) Long userId,
+    public ItemDto updateItem(@RequestBody ItemDto item,
+                              @RequestHeader(value = userIdHeader, required = false) Long ownerId,
                               @PathVariable Long id) {
-        userService.getUserById(userId);
-        item.setOwner(userId);
-        item.setId(id);
-        return itemService.updateItem(item, id);
+        userService.getUserById(ownerId);
+        return itemService.updateItem(item, id, ownerId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteItem(@PathVariable Long id) {
+        itemService.deleteItem(id);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@Valid @RequestBody CommentDtoRequest commentDto, @PathVariable Long itemId,
+                                 @RequestHeader(value = userIdHeader, required = false) Long userId) {
+        return itemService.addComment(commentDto, itemId, userId);
     }
 }
 

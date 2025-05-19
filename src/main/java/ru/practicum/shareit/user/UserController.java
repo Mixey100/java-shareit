@@ -26,14 +26,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody User user) {
-        return service.createUser(user);
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+        return service.createUser(userDto);
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUser(@RequestBody User user, @PathVariable Long id) {
-        user.setId(id);
-        return service.updateUser(user, id);
+    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
+        return service.updateUser(userDto, id);
     }
 
     @DeleteMapping("/{id}")
