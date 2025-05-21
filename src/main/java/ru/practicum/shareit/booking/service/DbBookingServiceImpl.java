@@ -43,7 +43,7 @@ public class DbBookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(bookingDtoRequest.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь с id = " + bookingDtoRequest.getItemId() + " не найдена"));
         if (!item.getAvailable()) {
-            throw new ValidationException("Вещь " + item.getId() + " недоступна для бронирования");
+            throw new IllegalStateException("Вещь " + item.getId() + " недоступна для бронирования");
         }
         Booking booking = bookingRepository.save(BookingMapper.mapToBooking(bookingDtoRequest, user, item));
         log.info("Запрос бронирования с id = {} добавлен", booking.getId());
@@ -61,7 +61,7 @@ public class DbBookingServiceImpl implements BookingService {
                     + booking.getItem());
         }
         if (!Objects.equals(booking.getStatus(), Status.WAITING)) {
-            throw new ValidationException("Бронирование подтверждено или отклонено");
+            throw new IllegalStateException("Бронирование подтверждено или отклонено");
         }
         if (approved) {
             booking.setStatus(Status.APPROVED);
