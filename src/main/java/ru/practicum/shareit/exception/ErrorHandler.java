@@ -18,6 +18,13 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalState(final IllegalStateException e) {
+        log.error("IllegalStateException {}", e.getMessage());
+        return new ErrorResponse("Несоответствие состояния", e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final NotFoundException e) {
         log.error("NotFoundException {}", e.getMessage());
@@ -30,4 +37,6 @@ public class ErrorHandler {
         log.error("ConflictException {}", e.getMessage());
         return new ErrorResponse("Конфликт данных", e.getMessage());
     }
+
+
 }
