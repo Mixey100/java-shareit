@@ -37,14 +37,17 @@ public class DbUserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto createUser(UserDto userDto) {
+        log.info("Создание пользователя");
         User entity = UserMapper.mapToUser(userDto);
         User user = repository.save(entity);
+        log.info("Пользователь с id = {} создан", user.getId());
         return UserMapper.mapToUserDto(user);
     }
 
     @Override
     @Transactional
     public UserDto updateUser(UserDto userDto, Long id) {
+        log.info("Обновление пользователя");
         User user = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
         if (userDto.getName() != null && !userDto.getName().isBlank()) {
@@ -58,6 +61,7 @@ public class DbUserServiceImpl implements UserService {
                 throw new ConflictException("Email уже существует");
             }
         }
+        log.info("Пользователь с id = {} обновлен", user.getId());
         return UserMapper.mapToUserDto(repository.save(user));
     }
 

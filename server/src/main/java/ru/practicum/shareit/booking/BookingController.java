@@ -31,10 +31,10 @@ public class BookingController {
         return bookingService.approveBooking(bookingId, approved, ownerId);
     }
 
-    @GetMapping("/{id}")
-    public BookingDto getBookingById(@PathVariable Long id,
+    @GetMapping("/{bookingId}")
+    public BookingDto getBookingById(@PathVariable Long bookingId,
                                      @RequestHeader(value = USER_ID_HEADER, required = false) Long userId) {
-        return bookingService.getBookingById(id, userId);
+        return bookingService.getBookingById(bookingId, userId);
     }
 
     @GetMapping

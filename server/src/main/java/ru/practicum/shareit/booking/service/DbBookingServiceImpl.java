@@ -46,7 +46,8 @@ public class DbBookingServiceImpl implements BookingService {
             throw new IllegalStateException("Вещь " + item.getId() + " недоступна для бронирования");
         }
         Booking booking = bookingRepository.save(BookingMapper.mapToBooking(bookingDtoRequest, user, item));
-        log.info("Запрос бронирования с id = {} добавлен", booking.getId());
+        log.info("Запрос бронирования с id = {} вещи с id = {} пользователем с id = {} добавлен", booking.getId(),
+                item.getId(), userId);
         return BookingMapper.mapToBookingDto(booking);
     }
 
@@ -69,6 +70,7 @@ public class DbBookingServiceImpl implements BookingService {
             booking.setStatus(Status.REJECTED);
         }
         booking = bookingRepository.save(booking);
+        log.info("Бронирование c id = {} подтверждено пользователем с id = {}", bookingId, userId);
         return BookingMapper.mapToBookingDto(booking);
     }
 
