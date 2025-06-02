@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -23,11 +22,9 @@ public class Item {
     User owner;
 
     @Column(nullable = false)
-    @Size(max = 50)
     String name;
 
     @Column(nullable = false)
-    @Size(max = 255)
     String description;
 
     @Column(name = "is_available", nullable = false)

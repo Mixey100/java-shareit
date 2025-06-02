@@ -22,9 +22,10 @@ import ru.practicum.shareit.item.dto.ItemDtoRequest;
 public class ItemController {
 
     private final ItemClient itemClient;
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 
     @GetMapping
-    public ResponseEntity<Object> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getItemsByOwnerId(@RequestHeader(USER_ID_HEADER) Long userId) {
         return itemClient.getItemsByOwnerId(userId);
     }
 
@@ -39,19 +40,20 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@Valid @RequestBody ItemDtoRequest dto, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> createItem(@Valid @RequestBody ItemDtoRequest dto,
+                                             @RequestHeader(USER_ID_HEADER) Long userId) {
         return itemClient.createItem(dto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@Valid @RequestBody CommentDtoRequest dto, @PathVariable Long itemId,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @RequestHeader(USER_ID_HEADER) Long userId) {
         return itemClient.addComment(dto, itemId, userId);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> updateItem(@RequestBody ItemDtoRequest newItem, @PathVariable("id") Long id,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @RequestHeader(USER_ID_HEADER) Long userId) {
         return itemClient.updateItem(newItem, id, userId);
     }
 

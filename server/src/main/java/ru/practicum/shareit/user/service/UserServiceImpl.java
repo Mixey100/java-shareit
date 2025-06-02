@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DbUserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
 

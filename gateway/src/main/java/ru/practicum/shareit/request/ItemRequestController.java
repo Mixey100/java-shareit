@@ -18,26 +18,27 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoRequest;
 public class ItemRequestController {
 
     private final ItemRequestClient itemRequestClient;
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<Object> createRequest(@Valid @RequestBody ItemRequestDtoRequest dto,
-                                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                @RequestHeader(USER_ID_HEADER) Long userId) {
         return itemRequestClient.createRequest(dto, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getRequestsByRequestorId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getRequestsByRequestorId(@RequestHeader(USER_ID_HEADER) Long userId) {
         return itemRequestClient.getRequestsByRequestorId(userId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getAllRequests(@RequestHeader(USER_ID_HEADER) Long userId) {
         return itemRequestClient.getAllRequests(userId);
     }
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequestById(@PathVariable("requestId") Long requestId,
-                                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                 @RequestHeader(USER_ID_HEADER) Long userId) {
         return itemRequestClient.getRequestById(requestId, userId);
     }
 }

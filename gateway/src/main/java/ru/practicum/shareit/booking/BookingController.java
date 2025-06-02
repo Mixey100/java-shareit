@@ -21,33 +21,34 @@ import ru.practicum.shareit.booking.dto.State;
 public class BookingController {
 
     private final BookingClient bookingClient;
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<Object> createBooking(@Valid @RequestBody BookingDtoRequest dto,
-                                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                @RequestHeader(USER_ID_HEADER) Long userId) {
         return bookingClient.createBooking(dto, userId);
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> approveBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId,
+    public ResponseEntity<Object> approveBooking(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable Long bookingId,
                                                  @RequestParam Boolean approved) {
         return bookingClient.approveBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBookingById(@PathVariable Long bookingId,
-                                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                 @RequestHeader(USER_ID_HEADER) Long userId) {
         return bookingClient.getById(bookingId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getBookingsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getBookingsByUserId(@RequestHeader(USER_ID_HEADER) Long userId,
                                                       @RequestParam(name = "state", defaultValue = "ALL") State state) {
         return bookingClient.getAllByUser(userId, state);
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getBookingsByUserItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getBookingsByUserItems(@RequestHeader(USER_ID_HEADER) Long userId,
                                                          @RequestParam(name = "state", defaultValue = "ALL") State state) {
         return bookingClient.getAllByUserItems(userId, state);
     }
